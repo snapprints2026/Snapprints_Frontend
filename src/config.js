@@ -3,7 +3,7 @@
 
 // Backend API. Set REACT_APP_API_BASE on Vercel; the fallback is production.
 export const API_BASE =
-  process.env.REACT_APP_API_BASE || "https://snapprintsbackend-production.up.railway.app/api";
+  process.env.Backend_API_BASE || "https://snapprintsbackend-production.up.railway.app/api";
 
 // Customer OTP login before upload.
 //   "false" → DEMO: scan QR → upload page directly (backend: REQUIRE_CUSTOMER_LOGIN=false)
