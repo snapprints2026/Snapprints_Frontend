@@ -105,7 +105,7 @@ export default function PrintForm() {
     }
 
     return null;
-  }, [currentStep, file, uploading, uploadProgress, isLocked, handleUploadJob, startPayment, paying, summary]);
+  },  [currentStep, file, uploading, uploadProgress, isLocked, handleUploadJob, startPayment, paying, summary, printerOffline]);
 
   // ── No machine= param ──────────────────────────────────────────────────
   if (!machineId && machineError) {
