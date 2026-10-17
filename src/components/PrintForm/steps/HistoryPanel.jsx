@@ -7,6 +7,32 @@ import {
 
 import * as customerApi from "../../../api/customer.api";
 
+import ReportIssue from "./ReportIssue";
+
+const REPORT_WINDOW_MS = 48 * 60 * 60 * 1000; // same as backend ISSUE_REPORT_WINDOW_HOURS
+
+const REFUND_LABELS = {
+  PROCESSING: "Refund in progress",
+  PENDING: "Refund started · 5–7 working days",
+  PROCESSED: "Refunded",
+  FAILED: "Refund delayed — our team is on it",
+};
+const ISSUE_LABELS = {
+  OPEN: "Problem reported · under review",
+  REJECTED: "Reviewed · machine confirmed it printed",
+};
+
+/* Show "Report a problem" only for paid jobs whose OTP was used,
+   not already refunded/reported, within the reporting window. */
+function canReportJob(job) {
+  return (
+    Number(job.is_paid) === 1 &&
+    (job.status === "PRINTING" || job.status === "PRINTED") &&
+    !job.refund_status &&
+    !job.issue_status &&
+    Date.now() - new Date(job.created_at).getTime() < REPORT_WINDOW_MS
+  );
+}
 const STATUS_LABELS = {
   CREATED: "Created", PRICED: "Priced", PAYING: "Paying",
   PAID: "Paid", PRINTING: "Printing", PRINTED: "Printed",
@@ -57,6 +83,7 @@ function HistorySkeleton() {
 
 export default function HistoryPanel({ open, onClose, authUser, onNameUpdated }) {
   const [jobs, setJobs] = useState([]);
+    const [reportingJobId, setReportingJobId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -233,6 +260,40 @@ export default function HistoryPanel({ open, onClose, authUser, onNameUpdated })
                           {job.amount != null ? `₹${job.amount}` : "—"}
                         </span>
                       </div>
+                          {job.refund_status || job.issue_status || job.ref_code ? (
+                        <div className="pf-history-support">
+                          {job.refund_status ? (
+                            <span className={`pf-history-refund refund-${job.refund_status.toLowerCase()}`}>
+                              {REFUND_LABELS[job.refund_status] || job.refund_status}
+                              {job.refund_amount ? ` · ₹${Number(job.refund_amount)}` : ""}
+                            </span>
+                          ) : job.issue_status && ISSUE_LABELS[job.issue_status] ? (
+                            <span className="pf-history-refund">{ISSUE_LABELS[job.issue_status]}</span>
+                          ) : null}
+                          {job.ref_code ? <span className="pf-history-ref">Ref {job.ref_code}</span> : null}
+                        </div>
+                      ) : null}
+
+                      {canReportJob(job) && reportingJobId !== job.job_id ? (
+                        <button
+                          type="button"
+                          className="pf-link-btn pf-report-link"
+                          onClick={() => setReportingJobId(job.job_id)}
+                        >
+                          Report a problem
+                        </button>
+                      ) : null}
+
+                      {reportingJobId === job.job_id ? (
+                        <ReportIssue
+                          jobId={job.job_id}
+                          refCode={job.ref_code}
+                          onClose={() => {
+                            setReportingJobId(null);
+                            fetchHistory();
+                          }}
+                        />
+                      ) : null}
                     </div>
                   </div>
                 );

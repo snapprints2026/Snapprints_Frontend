@@ -10,6 +10,9 @@ export const API_BASE =
 //   "true"  → LAUNCH: mobile + OTP first          (backend: REQUIRE_CUSTOMER_LOGIN=true)
 // Defaults to true when not set.
 export const REQUIRE_LOGIN = process.env.REACT_APP_REQUIRE_LOGIN !== "false";
+// Block payment when the kiosk is offline (no heartbeat for 2 minutes).
+// Keep the same as the backend's REQUIRE_MACHINE_ONLINE. "false" only for testing without a Pi.
+export const REQUIRE_MACHINE_ONLINE = process.env.REACT_REQUIRE_MACHINE_ONLINE !== "false";
 
 // Must match the backend's multer limit
 export const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50 MB

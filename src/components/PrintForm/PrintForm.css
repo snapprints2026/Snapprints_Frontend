@@ -1128,3 +1128,55 @@ html, body {
   0% { background-position: 100% 50%; }
   100% { background-position: 0 50%; }
 }
+/* ── Refunds, reports & privacy (OTP screen + history) ─────────────── */
+.pf-alert.info    { background: var(--surface-3); border: 1px solid var(--border-mid); color: var(--ink-2); }
+.pf-alert.warning { background: var(--amber-light); border: 1px solid var(--amber-border); color: var(--amber); }
+
+.pf-privacy-note {
+  margin: 12px 0 0; font-size: 11.5px; line-height: 1.55; color: var(--ink-3); text-align: center;
+}
+.pf-report-ref {
+  margin: 14px 0 0; font-size: 11.5px; color: var(--ink-3); text-align: center;
+}
+.pf-report-ref strong { color: var(--ink-2); letter-spacing: 0.5px; }
+.pf-report-link { display: block; margin: 12px auto 0; font-size: 12.5px; }
+
+.pf-done-box {
+  text-align: center; padding: 22px 16px; border-radius: var(--radius);
+  background: var(--green-light); border: 1px solid var(--green-border);
+}
+.pf-done-icon {
+  width: 44px; height: 44px; margin: 0 auto 10px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--green); color: #fff; font-size: 22px; font-weight: 800;
+}
+.pf-done-title { font-size: 16px; font-weight: 800; color: var(--ink); margin: 0 0 6px; }
+.pf-done-text  { font-size: 12.5px; color: var(--ink-2); margin: 0; line-height: 1.5; }
+.pf-again-btn  { margin-top: 18px; width: 100%; }
+
+.pf-report {
+  margin-top: 14px; padding: 14px; border-radius: var(--radius);
+  border: 1px solid var(--border-mid); background: var(--surface);
+}
+.pf-report-title { font-size: 13px; font-weight: 700; color: var(--ink); margin: 0 0 10px; }
+.pf-report-options { display: flex; flex-direction: column; gap: 6px; }
+.pf-report-option {
+  display: flex; align-items: center; justify-content: flex-start; gap: 8px;
+  padding: 9px 10px; cursor: pointer; text-align: left;
+  border: 1px solid var(--border); border-radius: 8px; font-size: 12.5px; color: var(--ink-2);
+}
+.pf-report-option input { width: auto; flex: 0 0 auto; margin: 0; }
+.pf-report-option.selected { border-color: var(--border-hi); background: var(--surface-3); }
+.pf-report-details {
+  width: 100%; margin-top: 10px; padding: 9px 10px; box-sizing: border-box; resize: vertical;
+  border: 1px solid var(--border-mid); border-radius: 8px; font: inherit; font-size: 12.5px;
+}
+.pf-report-actions { display: flex; align-items: center; justify-content: flex-end; gap: 14px; margin-top: 12px; }
+.pf-report .pf-report-submit {
+  width: auto; flex: 0 0 auto; padding: 10px 18px; font-size: 13px; text-transform: none; letter-spacing: 0;
+}
+
+.pf-history-support { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; font-size: 11.5px; }
+.pf-history-refund  { color: var(--amber); font-weight: 600; }
+.pf-history-refund.refund-processed, .pf-history-refund.refund-pending { color: var(--green); }
+.pf-history-ref     { color: var(--ink-3); }

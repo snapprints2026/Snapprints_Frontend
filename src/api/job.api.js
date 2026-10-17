@@ -47,3 +47,11 @@ export const updateJob = (jobId, { color, copies, paperSize, printSide }) =>
 
 /** → { status: "CREATED" | "PAYING" | "PAID" | "PRINTING" | "PRINTED" | "FAILED" | "EXPIRED" } */
 export const getJobStatus = (jobId) => apiRequest(`/job-status/${encodeURIComponent(jobId)}`);
+
+/** "Didn't get your print?" → { issueStatus, refundStatus?, message }
+ *  reason: NOTHING_PRINTED | MISSING_PAGES | BAD_QUALITY | MACHINE_ERROR | OTHER */
+export const reportIssue = (jobId, { reason, details }) =>
+  apiRequest(`/jobs/${encodeURIComponent(jobId)}/report`, {
+    method: "POST",
+    body: { reason, details },
+  });

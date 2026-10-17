@@ -14,6 +14,20 @@ import {
 
 const DEFAULT_OPTIONS = { color: "bw", copies: 1, printSide: "single", paperSize: "A4" };
 
+/* What to tell the customer when printing didn't happen */
+function failureMessage({ status, refundStatus, refundAmount }) {
+  const amount = refundAmount ? `₹${Number(refundAmount)} ` : "Your payment ";
+  const refunded = refundStatus === "PROCESSED" || refundStatus === "PENDING";
+  const why =
+    status === "EXPIRED"
+      ? "The OTP wasn't used in time, so this print was cancelled."
+      : "The printer couldn't print your document.";
+  if (refunded) return `${why} ${amount}has been refunded to your original payment method. It reaches you in 5–7 working days.`;
+  if (refundStatus === "FAILED")
+    return `${why} Your refund is being processed by our team — keep your reference number below.`;
+  return `${why} ${amount}is being refunded automatically.`;
+}
+
 export function usePrintJob({ machineId, machineStatus, onJobComplete }) {
   // Print options
   const [color, setColor] = useState(DEFAULT_OPTIONS.color);
@@ -27,6 +41,11 @@ export function usePrintJob({ machineId, machineStatus, onJobComplete }) {
   const [summary, setSummary] = useState(null);
   const [otp, setOtp] = useState(null);
   const [qrToken, setQrToken] = useState(null);
+  const [refCode, setRefCode] = useState(null);           // e.g. "SP-7KQ2MX" — for support
+  const [otpExpiresAt, setOtpExpiresAt] = useState(null);
+  const [jobStatus, setJobStatus] = useState(null);       // PAID → PRINTING → PRINTED | FAILED | EXPIRED
+  const [refundStatus, setRefundStatus] = useState(null); // null | PROCESSING | PENDING | PROCESSED | FAILED
+  const [issueStatus, setIssueStatus] = useState(null);   // null | OPEN | APPROVED | REJECTED | AUTO_APPROVED
 
   // UI state
   const [uploading, setUploading] = useState(false);
@@ -160,6 +179,9 @@ export function usePrintJob({ machineId, machineStatus, onJobComplete }) {
             const result = await paymentApi.verifyPayment(response);
             setOtp(result.otp);
             setQrToken(result.qrToken);
+            setRefCode(result.refCode || null);
+            setOtpExpiresAt(result.otpExpiresAt || null);
+            setJobStatus("PAID");
             setJobSuccess("Payment successful! Use your OTP to collect prints.");
           } catch (err) {
             setJobError(

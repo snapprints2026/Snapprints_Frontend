@@ -3,7 +3,7 @@
 import React, { useMemo, useState } from "react";
 import { MdMenu } from "react-icons/md";
 import "./PrintForm.css";
-
+import { REQUIRE_LOGIN, REQUIRE_MACHINE_ONLINE } from "../../config";
 import { useMachineStatus } from "./hooks/useMachineStatus";
 import { usePrintJob }      from "./hooks/usePrintJob";
 import { useAuth }          from "./hooks/useAuth";
@@ -42,6 +42,11 @@ export default function PrintForm() {
     jobId,
     summary,
     otp,
+    refCode,
+    otpExpiresAt,
+    jobStatus,
+    issueStatus,
+    setIssueStatus,
     handleUploadJob,
     startPayment,
     uploading,
@@ -60,6 +65,9 @@ export default function PrintForm() {
   const showLogin = REQUIRE_LOGIN && !auth.isAuthenticated;
   const showSessionCheck = REQUIRE_LOGIN && auth.checkingSession;
   const currentStep = useMemo(() => getCurrentStep(jobId, otp), [jobId, otp]);
+    // Don't take money for a printer that isn't connected (backend checks this too).
+  // machineStatus is null until the first status call returns — don't block then.
+  const printerOffline = REQUIRE_MACHINE_ONLINE && !!machineStatus && !isOnline;
 
   const actionBar = useMemo(() => {
     if (currentStep === 1) {
@@ -83,10 +91,12 @@ export default function PrintForm() {
         <button
           className="pf-btn pay"
           onClick={startPayment}
-          disabled={paying || isLocked || !summary}
+          disabled={paying || isLocked || !summary || printerOffline}
         >
-          {paying ? (
+         {paying ? (
             <><span className="pf-spinner" /> Opening Payment...</>
+          ) : printerOffline ? (
+            <>Printer offline — payment paused</>
           ) : (
             <>💳 Pay ₹{summary?.totalAmount ?? "—"} & Get OTP</>
           )}
@@ -240,6 +250,12 @@ export default function PrintForm() {
               {currentStep === 3 ? (
                 <StepOTP
                   otp={otp}
+                  jobId={jobId}
+                  refCode={refCode}
+                  otpExpiresAt={otpExpiresAt}
+                  jobStatus={jobStatus}
+                  issueStatus={issueStatus}
+                  onIssueReported={setIssueStatus}
                   jobSuccess={jobSuccess}
                   jobError={jobError}
                 />
