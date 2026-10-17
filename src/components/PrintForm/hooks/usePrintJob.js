@@ -202,31 +202,43 @@ export function usePrintJob({ machineId, machineStatus, onJobComplete }) {
     }
   };
 
-  /* ── STEP 3 — Wait for the kiosk to print ── */
+  /* ── STEP 3 — Wait for the kiosk to print ──
+     Keeps polling until the job is finished (PRINTED / FAILED / EXPIRED)
+     and, for failures, until the refund has been started. */
   useEffect(() => {
     if (!jobId || !otp) return;
+    let stopped = false;
 
-    const interval = setInterval(async () => {
+    const tick = async () => {
       try {
-        const { status } = await jobApi.getJobStatus(jobId);
+        const s = await jobApi.getJobStatus(jobId);
+        if (stopped) return;
+        setJobStatus(s.status);
+        setRefundStatus(s.refundStatus || null);
+        setIssueStatus(s.issueStatus || null);
+        if (s.refCode) setRefCode(s.refCode);
 
-        if (status === "PRINTED") {
-          clearInterval(interval);
+        if (s.status === "PRINTED") {
+          setJobError("");
+          setJobSuccess("");
           onJobComplete?.("success");
-          setTimeout(() => window.location.replace(window.location.origin), 3000);
-        } else if (status === "FAILED") {
-          clearInterval(interval);
-          setJobError("Printing failed. Your payment will be refunded automatically.");
-        } else if (status === "EXPIRED") {
-          clearInterval(interval);
-          setJobError("Your OTP expired before printing. Please contact support for a refund.");
+          stopped = true;
+        } else if (s.status === "FAILED" || s.status === "EXPIRED") {
+          setJobSuccess("");
+          setJobError(failureMessage(s));
+          // keep polling until the refund has started, then stop
+          if (s.refundStatus && s.refundStatus !== "PROCESSING") stopped = true;
         }
       } catch {
         // temporary network issue — keep polling
       }
-    }, JOB_STATUS_POLL_MS);
+    };
 
-    return () => clearInterval(interval);
+    const interval = setInterval(() => (stopped ? clearInterval(interval) : tick()), JOB_STATUS_POLL_MS);
+    return () => {
+      stopped = true;
+      clearInterval(interval);
+    };
   }, [jobId, otp, onJobComplete]);
 
   return {
@@ -242,6 +254,12 @@ export function usePrintJob({ machineId, machineStatus, onJobComplete }) {
     summary: localSummary,
     otp,
     qrToken,
+    refCode,
+    otpExpiresAt,
+    jobStatus,
+    refundStatus,
+    issueStatus,
+    setIssueStatus,
 
     // Actions
     handleUploadJob,
