@@ -8,7 +8,7 @@ import { useMachineStatus } from "./hooks/useMachineStatus";
 import { usePrintJob }      from "./hooks/usePrintJob";
 import { useAuth }          from "./hooks/useAuth";
 import { STEPS }            from "./constants";
-import { REQUIRE_LOGIN }    from "../../config";
+//import { REQUIRE_LOGIN }    from "../../config";
 
 import StepUpload   from "./steps/StepUpload";
 import StepSummary  from "./steps/StepSummary";
