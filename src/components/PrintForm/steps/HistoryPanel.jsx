@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { ImCross } from "react-icons/im";
 import {
-  MdClose, MdEdit, MdCheck, MdPictureAsPdf, MdImage,
+   MdEdit, MdCheck, MdPictureAsPdf, MdImage,
   MdDescription, MdInsertDriveFile, MdHistoryToggleOff, MdPrint,
 } from "react-icons/md";
 
