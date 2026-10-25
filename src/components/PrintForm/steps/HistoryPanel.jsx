@@ -1,5 +1,6 @@
 // HistoryPanel.jsx
 import React, { useEffect, useState, useCallback } from "react";
+import { ImCross } from "react-icons/im";
 import {
   MdClose, MdEdit, MdCheck, MdPictureAsPdf, MdImage,
   MdDescription, MdInsertDriveFile, MdHistoryToggleOff, MdPrint,
@@ -158,8 +159,11 @@ export default function HistoryPanel({ open, onClose, authUser, onNameUpdated })
       <div className="pf-drawer" onClick={(e) => e.stopPropagation()}>
         <div className="pf-drawer-header">
           <h3>My Account</h3>
-          <button className="pf-drawer-close" onClick={onClose} aria-label="Close">
+          {/* <button className="pf-drawer-close" onClick={onClose} aria-label="Close">
             <MdClose size={18} />
+          </button> */}
+            <button className="pf-remove-btn" onClick={onClose} aria-label="Close">
+            <ImCross size={14} />
           </button>
         </div>
 
