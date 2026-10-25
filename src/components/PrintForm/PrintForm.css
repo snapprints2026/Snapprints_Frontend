@@ -534,12 +534,14 @@ html, body {
 
 /* Counter (copies) */
 .pf-counter {
+  margin-top: 3.8px;
   display: flex; align-items: center;
   background: #FFFFFF; border: 1px solid var(--border-mid);
   border-radius: var(--radius); height: 42px; overflow: hidden;
 }
 
 .pf-counter-btn {
+  margin:0px;
   width: 40px; height: 100%; border: none; background: transparent;
   color: var(--ink-2); font-size: 20px;
   display: flex; align-items: center; justify-content: center;
@@ -917,7 +919,7 @@ html, body {
 
 .pf-summary-file-info .pf-remove-btn {
   margin-left: auto;
-
+  margin:0px !important;
   width: 36px;
   height: 36px;
 
