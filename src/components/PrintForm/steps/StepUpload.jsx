@@ -371,7 +371,7 @@ export default function StepUpload({
               <label>Paper Size</label>
               <select value={paperSize} onChange={(e) => setPaperSize(e.target.value)}>
                 <option value="A4">A4</option>
-                <option value="A3">A3</option>
+                {/* <option value="A3">A3</option> */}
               </select>
             </div>
           </div>
