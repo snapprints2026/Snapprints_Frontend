@@ -138,9 +138,19 @@ function PdfPage({ pdf, pageNumber, width, scrollRoot, defaultRatio }) {
     <div
       ref={holderRef}
       className="pf-pdf-page"
-      style={{ width, height: Math.round(width * ratio) }}
+      style={{
+        width,
+        height: Math.round(width * ratio),
+        flexShrink: 0,
+        margin: "0 auto 12px",
+        background: "#fff",
+        borderRadius: 4,
+        overflow: "hidden",
+        boxShadow: "0 4px 16px rgba(16,45,90,.10)",
+      }}
     >
-      <canvas ref={canvasRef} />
+      {/* width/height 100% scales the high-resolution bitmap down to the box */}
+      <canvas ref={canvasRef} style={{ display: "block", width: "100%", height: "100%" }} />
     </div>
   );
 }
@@ -306,7 +316,26 @@ function FilePreview({ file, type }) {
   }
 
   return (
-    <div className="pf-preview-wrap" ref={setScrollRoot}>
+    <div
+      className="pf-preview-wrap"
+      ref={setScrollRoot}
+      style={{
+        width: "100%",
+        height: "100%",
+        boxSizing: "border-box",
+        padding: 12,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "flex-start", // start at the top of page 1, not the middle
+        overflowY: "auto",            // scroll through every page
+        overflowX: "hidden",
+        WebkitOverflowScrolling: "touch",
+        touchAction: "pan-y",
+        background: "var(--surface-2)",
+        borderRadius: "var(--radius-lg)",
+      }}
+    >
       {type === "image" && (
         <img src={imageUrl} alt="File preview" className="pf-preview-img" />
       )}
@@ -357,7 +386,10 @@ export default function StepUpload({
       <p className="pf-section-title">Accepted formats:PDF,DOCX,JPG,JPEG,PNG </p>
 
       <div className={`pf-upload-card ${file ? "has-file" : ""}`}>
-        <div className={`pf-dropzone ${file ? "has-file" : ""}`}>
+        <div
+          className={`pf-dropzone ${file ? "has-file" : ""}`}
+          style={file ? { height: "min(60vh, 440px)", cursor: "default" } : undefined}
+        >
           {/* The invisible full-size input is ONLY rendered while no file is chosen.
               Otherwise it would sit on top of the preview and block scrolling/taps. */}
           {!file && (
@@ -391,7 +423,20 @@ export default function StepUpload({
             </span>
             <span className="file-name">{file.name}</span>
             <span className="file-size">{formatBytes(file.size)}</span>
-            <label className="pf-change-btn">
+            <label
+              className="pf-change-btn"
+              style={{
+                flexShrink: 0,
+                padding: "6px 12px",
+                borderRadius: 8,
+                cursor: "pointer",
+                fontSize: 12,
+                fontWeight: 700,
+                color: "var(--primary)",
+                background: "#fff",
+                border: "1px solid var(--border-mid)",
+              }}
+            >
               Change
               <input
                 type="file"
