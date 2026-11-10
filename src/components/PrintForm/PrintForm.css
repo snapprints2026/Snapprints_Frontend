@@ -432,7 +432,8 @@ html, body {
   border: none;
   background: transparent;
   width: 100%;
-  height: min(60vh, 440px);      /* taller preview */
+  /* height: min(60vh, 440px);      taller preview */
+  height: clamp(200px, 36vh, 300px);
   margin: 0;
   padding: 0;
   box-shadow: none;
@@ -808,6 +809,23 @@ html, body {
 /* "Change file" button next to the file name */
 .pf-change-btn {
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--primary);
+  background: #fff;
+  border: 1px solid var(--border-mid);
+}
+/* .pf-change-btn {
+  flex-shrink: 0;
   padding: 6px 12px;
   border-radius: 8px;
   cursor: pointer;
@@ -816,7 +834,7 @@ html, body {
   color: var(--primary);
   background: #fff;
   border: 1px solid var(--border-mid);
-}
+} */
 .pf-change-btn:hover { background: var(--surface-3); }
 
 .pf-preview-img {

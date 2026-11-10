@@ -388,7 +388,8 @@ export default function StepUpload({
       <div className={`pf-upload-card ${file ? "has-file" : ""}`}>
         <div
           className={`pf-dropzone ${file ? "has-file" : ""}`}
-          style={file ? { height: "min(60vh, 440px)", cursor: "default" } : undefined}
+          // style={file ? { height: "min(60vh, 440px)", cursor: "default" } : undefined}
+          style={file ? { height: "clamp(200px, 36vh, 300px)", cursor: "default" } : undefined}
         >
           {/* The invisible full-size input is ONLY rendered while no file is chosen.
               Otherwise it would sit on top of the preview and block scrolling/taps. */}
@@ -426,16 +427,33 @@ export default function StepUpload({
             <label
               className="pf-change-btn"
               style={{
-                flexShrink: 0,
-                padding: "6px 12px",
-                borderRadius: 8,
-                cursor: "pointer",
-                fontSize: 12,
-                fontWeight: 700,
-                color: "var(--primary)",
-                background: "#fff",
-                border: "1px solid var(--border-mid)",
-              }}
+                    flexShrink: 0,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    minHeight: 38,
+                    padding: "0 18px",
+                    borderRadius: 10,
+                    cursor: "pointer",
+                    fontSize: 14,
+                    fontWeight: 700,
+                    lineHeight: 1,
+                    whiteSpace: "nowrap",
+                    color: "var(--primary)",
+                    background: "#fff",
+                    border: "1px solid var(--border-mid)",
+                      }}
+              // style={{
+              //   flexShrink: 0,
+              //   padding: "6px 12px",
+              //   borderRadius: 8,
+              //   cursor: "pointer",
+              //   fontSize: 12,
+              //   fontWeight: 700,
+              //   color: "var(--primary)",
+              //   background: "#fff",
+              //   border: "1px solid var(--border-mid)",
+              // }}
             >
               Change
               <input
